@@ -27,13 +27,14 @@ const CreateQuiz = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  /* ✅ VERSION PROTECTION */
+  /* ✅ VERSION PROTECTION (FIXED SAFE VERSION) */
   useEffect(() => {
     const version = "quiz_v2";
     const storedVersion = localStorage.getItem("quizVersion");
 
     if (storedVersion !== version) {
-      localStorage.clear();
+      // ⭐ ONLY CLEAR QUIZ DATA (DO NOT TOUCH AUTH)
+      localStorage.removeItem("question");
       localStorage.setItem("quizVersion", version);
     }
   }, []);
@@ -78,10 +79,7 @@ const CreateQuiz = () => {
     }
   };
 
-  /* ⭐ UPDATED VALIDATION (Evaluator Rules) */
   const validateForm = () => {
-
-    // Title 10–30 chars
     if (
       current.title.trim().length < 10 ||
       current.title.trim().length > 30
@@ -90,7 +88,6 @@ const CreateQuiz = () => {
       return false;
     }
 
-    // Question 10–200 chars
     if (
       current.question.trim().length < 10 ||
       current.question.trim().length > 200

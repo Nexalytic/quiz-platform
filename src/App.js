@@ -50,10 +50,16 @@ const theme = createTheme({
   }
 });
 
-/* ⭐ PRIVATE ROUTE GUARD */
+/* ⭐ PRIVATE ROUTE GUARD (UPDATED SAFE VERSION) */
 const PrivateRoute = ({ children }) => {
   const user = localStorage.getItem("playerName");
-  return user ? children : <Navigate to="/auth" />;
+
+  // Strong validation to prevent empty / invalid auth
+  if (!user || user.trim() === "") {
+    return <Navigate to="/auth" replace />;
+  }
+
+  return children;
 };
 
 function App() {

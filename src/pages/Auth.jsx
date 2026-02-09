@@ -15,10 +15,13 @@ const Auth = () => {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
 
-  /* ✅ If already logged in → redirect */
+  /* ✅ If already logged in → redirect (UPDATED SAFE CHECK) */
   useEffect(() => {
     const stored = localStorage.getItem("playerName");
-    if (stored) navigate("/");
+
+    if (stored && stored.trim() !== "") {
+      navigate("/", { replace: true });
+    }
   }, [navigate]);
 
   /* ✅ Validate Name */
@@ -43,8 +46,14 @@ const Auth = () => {
   const handleLogin = () => {
     if (!validateName()) return;
 
-    localStorage.setItem("playerName", name.trim());
-    navigate("/");
+    const trimmedName = name.trim();
+
+    localStorage.setItem("playerName", trimmedName);
+
+    // Ensure storage finishes before navigation
+    setTimeout(() => {
+      navigate("/", { replace: true });
+    }, 50);
   };
 
   return (
@@ -56,14 +65,12 @@ const Auth = () => {
         alignItems: "center",
         position: "relative",
         overflow: "hidden",
-
-        /* ⭐ PREMIUM MULTI GRADIENT BACKGROUND */
         background:
           "linear-gradient(135deg, #6366F1 0%, #8B5CF6 40%, #EC4899 100%)"
       }}
     >
 
-      {/* ⭐ Floating Glow Blob 1 */}
+      {/* Glow Blob 1 */}
       <Box
         sx={{
           position: "absolute",
@@ -78,7 +85,7 @@ const Auth = () => {
         }}
       />
 
-      {/* ⭐ Floating Glow Blob 2 */}
+      {/* Glow Blob 2 */}
       <Box
         sx={{
           position: "absolute",
